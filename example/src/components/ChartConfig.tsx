@@ -80,6 +80,13 @@ export interface ChartConfigProps {
       color?: string;
     };
 
+    // Y-axis scale configuration
+    yAxis?: {
+      autoScale?: boolean;
+      min?: number;
+      max?: number;
+    };
+
     // Pie chart specific properties (can be extended)
     [key: string]: any; // Allow dynamic property access
   };
@@ -166,6 +173,58 @@ export function ChartConfig({ chartType, config, onConfigChange }: ChartConfigPr
             <Text style={styles.sliderValue}>{config.lineStyle?.width || 2}</Text>
           </View>
         </View>
+      </View>
+
+      {/* Y-Axis Scale Card */}
+      <View style={styles.card}>
+        <View style={styles.cardRowSpaced}>
+          <Text style={styles.cardTitle}>Y-Axis Scale</Text>
+          <View style={styles.switchContainer}>
+            <Text style={styles.switchLabel}>Auto</Text>
+            <Switch
+              value={config.yAxis?.autoScale !== false}
+              onValueChange={value => updateConfig("yAxis.autoScale", value)}
+              trackColor={{ false: "#d3d3d3", true: "#007AFF50" }}
+              thumbColor={config.yAxis?.autoScale !== false ? "#007AFF" : "#f4f3f4"}
+            />
+          </View>
+        </View>
+
+        {config.yAxis?.autoScale === false && (
+          <>
+            <View style={styles.cardRow}>
+              <Text style={styles.label}>Min Value</Text>
+              <TextInput
+                style={styles.numberInput}
+                value={config.yAxis?.min?.toString() || "0"}
+                onChangeText={value => {
+                  const numValue = Number(value);
+                  if (!isNaN(numValue)) {
+                    updateConfig("yAxis.min", numValue);
+                  }
+                }}
+                keyboardType="numeric"
+                placeholder="0"
+              />
+            </View>
+
+            <View style={styles.cardRow}>
+              <Text style={styles.label}>Max Value</Text>
+              <TextInput
+                style={styles.numberInput}
+                value={config.yAxis?.max?.toString() || "100"}
+                onChangeText={value => {
+                  const numValue = Number(value);
+                  if (!isNaN(numValue)) {
+                    updateConfig("yAxis.max", numValue);
+                  }
+                }}
+                keyboardType="numeric"
+                placeholder="100"
+              />
+            </View>
+          </>
+        )}
       </View>
 
       {/* Colors Card */}
@@ -441,5 +500,23 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ddd",
     alignSelf: "flex-end",
+  },
+  numberInput: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 6,
+    padding: 8,
+    fontSize: 14,
+    width: 80,
+    textAlign: "right",
+  },
+  switchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  switchLabel: {
+    fontSize: 13,
+    color: "#555",
+    marginRight: 8,
   },
 });

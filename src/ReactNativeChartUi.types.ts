@@ -172,6 +172,26 @@ export type LineChartProps = AxisChartProps & {
      */
     onSelect?: (point: ChartDataPoint) => void;
   };
+
+  /**
+   * Optional configuration for y-axis scale
+   */
+  yAxis?: {
+    /**
+     * Whether to automatically scale the y-axis (default: true)
+     */
+    autoScale?: boolean;
+
+    /**
+     * Minimum value for y-axis when autoScale is false
+     */
+    min?: number;
+
+    /**
+     * Maximum value for y-axis when autoScale is false
+     */
+    max?: number;
+  };
 };
 
 /**

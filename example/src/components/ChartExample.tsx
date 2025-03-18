@@ -32,6 +32,11 @@ export function ChartExample({ title, initialType = "bar" }: ChartExampleProps) 
     selection: {
       color: "rgba(0, 122, 255, 0.3)",
     },
+    yAxis: {
+      autoScale: true,
+      min: 0,
+      max: 100,
+    },
   });
 
   // Update config when changing chart type for better defaults
@@ -60,6 +65,7 @@ export function ChartExample({ title, initialType = "bar" }: ChartExampleProps) 
             lineStyle={chartConfig.lineStyle}
             points={chartConfig.points}
             selection={chartConfig.selection}
+            yAxis={chartConfig.yAxis}
           />
         );
       case "pie":

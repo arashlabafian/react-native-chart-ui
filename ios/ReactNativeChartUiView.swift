@@ -83,6 +83,11 @@ struct ChartContentView: View {
     var pointColor: Color
     var selectionColor: Color
     
+    // Y-axis scale configuration
+    var autoScaleYAxis: Bool
+    var yAxisMin: Double
+    var yAxisMax: Double
+    
     // Selection state using native SwiftUI Charts selection
     @State private var selectedDataPoint: String? = nil
     
@@ -204,6 +209,11 @@ struct ChartContentView: View {
     
     // Calculate appropriate Y-axis domain to keep it fixed
     private func calculateYAxisDomain() -> ClosedRange<Double> {
+        if !autoScaleYAxis {
+            // Use manual min/max values if auto-scale is disabled
+            return yAxisMin...yAxisMax
+        }
+        
         guard !data.isEmpty else { return 0...10 }
         
         let minValue = data.map { $0.value }.min() ?? 0
@@ -286,6 +296,11 @@ class ReactNativeChartUiView: ExpoView {
     private var pointColorHex: String = "#007AFF"
     private var selectionColorHex: String = "rgba(0, 122, 255, 0.3)"
     
+    // Y-axis scale configuration
+    private var autoScaleYAxisValue: Bool = true
+    private var yAxisMinValue: Double = 0
+    private var yAxisMaxValue: Double = 100
+    
     required init(appContext: AppContext? = nil) {
         super.init(appContext: appContext)
         clipsToBounds = true
@@ -350,7 +365,10 @@ class ReactNativeChartUiView: ExpoView {
             showPoints: showPointsValue,
             pointSize: CGFloat(pointSizeValue),
             pointColor: pointColor,
-            selectionColor: selectionColor
+            selectionColor: selectionColor,
+            autoScaleYAxis: autoScaleYAxisValue,
+            yAxisMin: yAxisMinValue,
+            yAxisMax: yAxisMaxValue
         )
     }
     
@@ -422,6 +440,22 @@ class ReactNativeChartUiView: ExpoView {
     
     func setSelectionColor(_ color: String) {
         self.selectionColorHex = color
+        updateChartView()
+    }
+    
+    // Y-axis scale setters
+    func setAutoScaleYAxis(_ autoScale: Bool) {
+        self.autoScaleYAxisValue = autoScale
+        updateChartView()
+    }
+    
+    func setYAxisMin(_ min: Double) {
+        self.yAxisMinValue = min
+        updateChartView()
+    }
+    
+    func setYAxisMax(_ max: Double) {
+        self.yAxisMaxValue = max
         updateChartView()
     }
     

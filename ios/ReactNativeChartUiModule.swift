@@ -121,6 +121,19 @@ public class ReactNativeChartUiModule: Module {
       Prop("selectionColor") { (view: ReactNativeChartUiView, color: String) in
         view.setSelectionColor(color)
       }
+      
+      // Y-axis scale configuration
+      Prop("autoScaleYAxis") { (view: ReactNativeChartUiView, autoScale: Bool) in
+        view.setAutoScaleYAxis(autoScale)
+      }
+      
+      Prop("yAxisMin") { (view: ReactNativeChartUiView, min: Double) in
+        view.setYAxisMin(min)
+      }
+      
+      Prop("yAxisMax") { (view: ReactNativeChartUiView, max: Double) in
+        view.setYAxisMax(max)
+      }
     }
   }
 }

@@ -51,7 +51,7 @@ export function BarChart(props: BarChartProps) {
  * Displays data as a connected line with points
  */
 export function LineChart(props: LineChartProps) {
-  const { data, title, xAxisLabel, yAxisLabel, style, interactive = true, lineStyle, points, selection } = props;
+  const { data, title, xAxisLabel, yAxisLabel, style, interactive = true, lineStyle, points, selection, yAxis } = props;
 
   if (!NativeChartView) {
     return <ChartFallback chartType="line" />;
@@ -67,6 +67,11 @@ export function LineChart(props: LineChartProps) {
   const pointColor = points?.color || "#007AFF";
 
   const selectionColor = selection?.color || "rgba(0, 122, 255, 0.3)";
+
+  // Y-axis scale configuration
+  const autoScaleYAxis = yAxis?.autoScale !== false;
+  const yAxisMin = yAxis?.min ?? 0;
+  const yAxisMax = yAxis?.max ?? 100;
 
   return (
     <NativeChartView
@@ -84,6 +89,10 @@ export function LineChart(props: LineChartProps) {
       pointSize={pointSize}
       pointColor={pointColor}
       selectionColor={selectionColor}
+      // Y-axis scale props
+      autoScaleYAxis={autoScaleYAxis}
+      yAxisMin={yAxisMin}
+      yAxisMax={yAxisMax}
       style={style}
     />
   );
