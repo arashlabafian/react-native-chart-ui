@@ -97,7 +97,6 @@ Key Conventions
 
 Folder Structure
 tree -I "node_modules|build|example" | pbcopy
-
 .
 ├── README.md
 ├── android
@@ -113,28 +112,21 @@ tree -I "node_modules|build|example" | pbcopy
 │                           └── ReactNativeChartUiView.kt
 ├── expo-module.config.json
 ├── ios
-│   ├── BarChartView.swift
-│   ├── ChartDataPoint.swift
-│   ├── LineChartView.swift
-│   ├── PieChartView.swift
 │   ├── ReactNativeChartUi.podspec
 │   ├── ReactNativeChartUiModule.swift
 │   └── ReactNativeChartUiView.swift
 ├── package-lock.json
 ├── package.json
 ├── src
-│   ├── BarChartView.tsx
-│   ├── LineChartView.tsx
-│   ├── PieChartView.tsx
 │   ├── ReactNativeChartUi.types.ts
 │   ├── ReactNativeChartUiModule.ts
 │   ├── ReactNativeChartUiModule.web.ts
-│   ├── ReactNativeChartUiView.tsx
-│   ├── ReactNativeChartUiView.web.tsx
+│   ├── charts.tsx
+│   ├── charts.web.tsx
 │   └── index.ts
 └── tsconfig.json
 
-10 directories, 25 files
+10 directories, 18 files
 
 
 API Documentation
