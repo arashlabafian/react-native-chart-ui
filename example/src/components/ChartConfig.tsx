@@ -1,8 +1,35 @@
 import Slider from "@react-native-community/slider";
 import { Picker } from "@react-native-picker/picker";
 import React from "react";
-import { View, Text, StyleSheet, TextInput, Switch, ScrollView } from "react-native";
+import { View, Text, StyleSheet, TextInput, Switch, ScrollView, TouchableOpacity } from "react-native";
 import { ChartType } from "react-native-chart-ui";
+
+// Predefined colors for selection
+const COLORS = [
+  { name: "Blue", value: "#007AFF" },
+  { name: "Red", value: "#FF3B30" },
+  { name: "Green", value: "#34C759" },
+  { name: "Purple", value: "#AF52DE" },
+  { name: "Orange", value: "#FF9500" },
+  { name: "Teal", value: "#5AC8FA" },
+  { name: "Pink", value: "#FF2D55" },
+];
+
+// Component for color selection
+interface ColorPickerProps {
+  selectedColor: string;
+  onSelectColor: (color: string) => void;
+}
+
+function ColorPicker({ selectedColor, onSelectColor }: ColorPickerProps) {
+  return (
+    <View style={styles.colorPickerContainer}>
+      {COLORS.map(color => (
+        <TouchableOpacity key={color.value} style={[styles.colorOption, { backgroundColor: color.value }, selectedColor === color.value && styles.colorOptionSelected]} onPress={() => onSelectColor(color.value)} />
+      ))}
+    </View>
+  );
+}
 
 export interface ChartConfigProps {
   chartType: ChartType;
@@ -84,14 +111,15 @@ export function ChartConfig({ chartType, config, onConfigChange }: ChartConfigPr
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>Line Chart Configuration</Text>
 
-      <View style={styles.configItem}>
-        <Text style={styles.label}>Interactive</Text>
-        <Switch value={config.interactive ?? true} onValueChange={value => updateConfig("interactive", value)} />
+      <View style={[styles.configItem, styles.interactiveToggle]}>
+        <Text style={styles.label}>Interactive Mode</Text>
+        <Text style={styles.description}>When enabled, you can tap and drag to view data points</Text>
+        <Switch value={config.interactive ?? true} onValueChange={value => updateConfig("interactive", value)} trackColor={{ false: "#d3d3d3", true: "#007AFF50" }} thumbColor={config.interactive ? "#007AFF" : "#f4f3f4"} />
       </View>
 
       <View style={styles.configItem}>
         <Text style={styles.label}>Line Color</Text>
-        <TextInput style={styles.textInput} value={config.lineStyle?.color || "#007AFF"} onChangeText={value => updateConfig("lineStyle.color", value)} placeholder="#007AFF" />
+        <ColorPicker selectedColor={config.lineStyle?.color || "#007AFF"} onSelectColor={color => updateConfig("lineStyle.color", color)} />
       </View>
 
       <View style={styles.configItem}>
@@ -121,14 +149,29 @@ export function ChartConfig({ chartType, config, onConfigChange }: ChartConfigPr
 
           <View style={styles.configItem}>
             <Text style={styles.label}>Point Color</Text>
-            <TextInput style={styles.textInput} value={config.points?.color || "#007AFF"} onChangeText={value => updateConfig("points.color", value)} placeholder="#007AFF" />
+            <ColorPicker selectedColor={config.points?.color || "#007AFF"} onSelectColor={color => updateConfig("points.color", color)} />
           </View>
         </>
       )}
 
       <View style={styles.configItem}>
         <Text style={styles.label}>Selection Color</Text>
-        <TextInput style={styles.textInput} value={config.selection?.color || "rgba(0, 122, 255, 0.3)"} onChangeText={value => updateConfig("selection.color", value)} placeholder="rgba(0, 122, 255, 0.3)" />
+        <ColorPicker
+          selectedColor={config.selection?.color || "rgba(0, 122, 255, 0.3)"}
+          onSelectColor={color => {
+            // Convert to semi-transparent version for selection
+            let colorValue = color;
+            if (!colorValue.includes("rgba")) {
+              // Convert hex to rgba with transparency
+              const hexWithoutHash = colorValue.replace("#", "");
+              const r = parseInt(hexWithoutHash.substring(0, 2), 16);
+              const g = parseInt(hexWithoutHash.substring(2, 4), 16);
+              const b = parseInt(hexWithoutHash.substring(4, 6), 16);
+              colorValue = `rgba(${r}, ${g}, ${b}, 0.3)`;
+            }
+            updateConfig("selection.color", colorValue);
+          }}
+        />
       </View>
     </View>
   );
@@ -210,5 +253,36 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#777",
     fontStyle: "italic",
+  },
+  colorPickerContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginTop: 4,
+  },
+  colorOption: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    marginRight: 10,
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: "#ddd",
+  },
+  colorOptionSelected: {
+    borderWidth: 2,
+    borderColor: "#333",
+  },
+  description: {
+    fontSize: 12,
+    color: "#888",
+    marginBottom: 8,
+  },
+  interactiveToggle: {
+    backgroundColor: "#f9f9f9",
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 16,
+    borderLeftWidth: 3,
+    borderLeftColor: "#007AFF",
   },
 });

@@ -18,8 +18,8 @@ public class ReactNativeChartUiModule: Module {
         "PIE": "pie"
       ],
       "SUPPORTED_IOS_VERSION": [
-        "BAR": 16.0,
-        "LINE": 16.0,
+        "BAR": 17.0,
+        "LINE": 17.0,
         "PIE": 17.0
       ]
     ])
@@ -45,12 +45,9 @@ public class ReactNativeChartUiModule: Module {
     AsyncFunction("getAvailableChartTypes") { () -> [String: String] in
       var availableTypes: [String: String] = [:]
       
-      if #available(iOS 16.0, *) {
+      if #available(iOS 17.0, *) {
         availableTypes["BAR"] = "bar"
         availableTypes["LINE"] = "line"
-      }
-      
-      if #available(iOS 17.0, *) {
         availableTypes["PIE"] = "pie"
       }
       
@@ -86,6 +83,43 @@ public class ReactNativeChartUiModule: Module {
       
       Prop("yAxisLabel") { (view: ReactNativeChartUiView, label: String) in
         view.setYAxisLabel(label)
+      }
+      
+      // Line chart specific props
+      Prop("interactive") { (view: ReactNativeChartUiView, interactive: Bool) in
+        view.setInteractive(interactive)
+      }
+      
+      // Replace nested objects with individual properties
+      // Line style props
+      Prop("lineColor") { (view: ReactNativeChartUiView, color: String) in
+        view.setLineColor(color)
+      }
+      
+      Prop("lineWidth") { (view: ReactNativeChartUiView, width: Double) in
+        view.setLineWidth(width)
+      }
+      
+      Prop("lineInterpolation") { (view: ReactNativeChartUiView, interpolation: String) in
+        view.setLineInterpolation(interpolation)
+      }
+      
+      // Points configuration
+      Prop("showPoints") { (view: ReactNativeChartUiView, show: Bool) in
+        view.setShowPoints(show)
+      }
+      
+      Prop("pointSize") { (view: ReactNativeChartUiView, size: Double) in
+        view.setPointSize(size)
+      }
+      
+      Prop("pointColor") { (view: ReactNativeChartUiView, color: String) in
+        view.setPointColor(color)
+      }
+      
+      // Selection configuration
+      Prop("selectionColor") { (view: ReactNativeChartUiView, color: String) in
+        view.setSelectionColor(color)
       }
     }
   }

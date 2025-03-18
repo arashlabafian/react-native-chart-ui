@@ -7,8 +7,6 @@ import { ChartExample } from "./src/components/ChartExample";
 export default function App() {
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>React Native Chart UI</Text>
-
       <View style={styles.chartContainer}>
         <ChartExample title="Interactive Chart Example" initialType="bar" />
       </View>
@@ -32,13 +30,7 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
-  header: {
-    fontSize: 28,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginVertical: 20,
-    color: "#333",
-  },
+
   chartContainer: {
     zIndex: 1,
     backgroundColor: "#fff",

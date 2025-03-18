@@ -57,7 +57,36 @@ export function LineChart(props: LineChartProps) {
     return <ChartFallback chartType="line" />;
   }
 
-  return <NativeChartView data={data} chartType="line" title={title} xAxisLabel={xAxisLabel} yAxisLabel={yAxisLabel} interactive={interactive} lineStyle={lineStyle} points={points} selection={selection} style={style} />;
+  // Extract individual props from nested objects
+  const lineColor = lineStyle?.color || "#007AFF";
+  const lineWidth = lineStyle?.width || 2;
+  const lineInterpolation = lineStyle?.interpolation || "curved";
+
+  const showPoints = points?.visible ?? true;
+  const pointSize = points?.size || 6;
+  const pointColor = points?.color || "#007AFF";
+
+  const selectionColor = selection?.color || "rgba(0, 122, 255, 0.3)";
+
+  return (
+    <NativeChartView
+      data={data}
+      chartType="line"
+      title={title}
+      xAxisLabel={xAxisLabel}
+      yAxisLabel={yAxisLabel}
+      interactive={interactive}
+      // Pass individual props instead of objects
+      lineColor={lineColor}
+      lineWidth={lineWidth}
+      lineInterpolation={lineInterpolation}
+      showPoints={showPoints}
+      pointSize={pointSize}
+      pointColor={pointColor}
+      selectionColor={selectionColor}
+      style={style}
+    />
+  );
 }
 
 /**
