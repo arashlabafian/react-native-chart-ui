@@ -1,22 +1,8 @@
-// Reexport the native module. On web, it will be resolved to ReactNativeChartUiModule.web.ts
-// and on native platforms to ReactNativeChartUiModule.ts
-import { ChartDataPoint, ChartProps, ChartType, ReactNativeChartUiViewProps } from "./ReactNativeChartUi.types";
-import ReactNativeChartUiModule from "./ReactNativeChartUiModule";
-import { BarChart, LineChart, PieChart } from "./charts";
+// Export chart components
+export { BarChart, LineChart, PieChart } from "./charts";
 
-export {
-  // Chart components
-  BarChart,
-  LineChart,
-  PieChart,
+// Export type definitions for public use
+export { ChartDataPoint, ChartType, ChartProps, BarChartProps, LineChartProps, PieChartProps } from "./ReactNativeChartUi.types";
 
-  // Module and types
-  ReactNativeChartUiModule,
-  ChartDataPoint,
-  ChartProps,
-  ChartType,
-  ReactNativeChartUiViewProps,
-};
-
-// Export BarChart as the default export since it's likely the most commonly used
-export default BarChart;
+// Export module for advanced usage
+export { default as ReactNativeChartUiModule } from "./ReactNativeChartUiModule";

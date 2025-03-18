@@ -1,23 +1,34 @@
 import { requireNativeModule } from "expo-modules-core";
+import { Platform } from "react-native";
 
-// It loads the native module object from the JSI or falls back to
-// the bridge module (from NativeModulesProxy) if the remote debugger is on.
-const ReactNativeChartUiModule = requireNativeModule("ReactNativeChartUi") as {
-  readonly CHART_TYPES: {
-    readonly BAR: string;
-    readonly LINE: string;
-    readonly PIE: string;
-  };
-  readonly SUPPORTED_IOS_VERSION: {
-    readonly BAR: number;
-    readonly LINE: number;
-    readonly PIE: number;
-  };
-  getAvailableChartTypes(): Promise<{
-    readonly BAR?: string;
-    readonly LINE?: string;
-    readonly PIE?: string;
-  }>;
-};
+import { ChangeEventPayload, OnChartLoadEventPayload } from "./ReactNativeChartUi.types";
 
-export default ReactNativeChartUiModule;
+/**
+ * ReactNativeChartUi Native Module Interface
+ * Provides methods for interacting with the native chart implementation
+ */
+interface ReactNativeChartUiModule {
+  /**
+   * Get the version of the native chart module
+   */
+  getVersion(): Promise<string>;
+
+  /**
+   * Event listeners
+   */
+  addListener(eventName: string): void;
+  removeListeners(count: number): void;
+}
+
+let nativeModule: ReactNativeChartUiModule | null = null;
+
+// Load the native module only if we're on a supported platform
+if (Platform.OS !== "web") {
+  try {
+    nativeModule = requireNativeModule("ReactNativeChartUi");
+  } catch (error) {
+    console.warn("The native ReactNativeChartUi module is not available. " + "Make sure the expo-module-react-native-chart-ui is properly installed and linked.");
+  }
+}
+
+export default nativeModule;

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
+import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
 import { BarChart, LineChart, PieChart } from "react-native-chart-ui";
 
 import { useChartData } from "../hooks/useChartData";
@@ -15,11 +15,11 @@ export function ChartExample({ title, initialType = "bar" }: ChartExampleProps) 
   const renderChart = () => {
     switch (chartType) {
       case "bar":
-        return <BarChart data={data} title="Bar Chart Example" xAxisLabel="Months" yAxisLabel="Values" style={styles.chart} />;
+        return <BarChart data={data} title="Sales by Month" xAxisLabel="Months" yAxisLabel="Revenue" style={styles.chart} />;
       case "line":
-        return <LineChart data={data} title="Line Chart Example" xAxisLabel="Days" yAxisLabel="Values" style={styles.chart} />;
+        return <LineChart data={data} title="Weekly Performance" xAxisLabel="Days" yAxisLabel="Values" style={styles.chart} />;
       case "pie":
-        return <PieChart data={data} title="Pie Chart Example" style={styles.chart} />;
+        return <PieChart data={data} title="Market Share" style={styles.chart} />;
       default:
         return null;
     }
@@ -32,13 +32,30 @@ export function ChartExample({ title, initialType = "bar" }: ChartExampleProps) 
       <View style={styles.chartContainer}>{renderChart()}</View>
 
       <View style={styles.buttonContainer}>
-        <Button title="Bar Chart" onPress={() => changeChartType("bar")} disabled={chartType === "bar"} />
-        <Button title="Line Chart" onPress={() => changeChartType("line")} disabled={chartType === "line"} />
-        <Button title="Pie Chart" onPress={() => changeChartType("pie")} disabled={chartType === "pie"} />
+        <ChartTypeButton title="Bar Chart" onPress={() => changeChartType("bar")} isSelected={chartType === "bar"} />
+        <ChartTypeButton title="Line Chart" onPress={() => changeChartType("line")} isSelected={chartType === "line"} />
+        <ChartTypeButton title="Pie Chart" onPress={() => changeChartType("pie")} isSelected={chartType === "pie"} />
       </View>
 
-      <Button title="Shuffle Data" onPress={shuffleData} />
+      <TouchableOpacity style={styles.shuffleButton} onPress={shuffleData}>
+        <Text style={styles.shuffleButtonText}>Shuffle Data</Text>
+      </TouchableOpacity>
     </View>
+  );
+}
+
+// Chart type selection button component
+interface ChartTypeButtonProps {
+  title: string;
+  onPress: () => void;
+  isSelected: boolean;
+}
+
+function ChartTypeButton({ title, onPress, isSelected }: ChartTypeButtonProps) {
+  return (
+    <TouchableOpacity style={[styles.chartTypeButton, isSelected && styles.chartTypeButtonSelected]} onPress={onPress} disabled={isSelected}>
+      <Text style={[styles.chartTypeButtonText, isSelected && styles.chartTypeButtonTextSelected]}>{title}</Text>
+    </TouchableOpacity>
   );
 }
 
@@ -71,5 +88,33 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     marginBottom: 16,
+  },
+  chartTypeButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+    backgroundColor: "#f5f5f5",
+    minWidth: 100,
+    alignItems: "center",
+  },
+  chartTypeButtonSelected: {
+    backgroundColor: "#007AFF",
+  },
+  chartTypeButtonText: {
+    color: "#333",
+    fontWeight: "500",
+  },
+  chartTypeButtonTextSelected: {
+    color: "#fff",
+  },
+  shuffleButton: {
+    backgroundColor: "#f0f0f0",
+    paddingVertical: 10,
+    borderRadius: 6,
+    alignItems: "center",
+  },
+  shuffleButtonText: {
+    color: "#007AFF",
+    fontWeight: "600",
   },
 });

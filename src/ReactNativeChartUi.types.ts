@@ -14,19 +14,7 @@ export type ChartDataPoint = {
 export type ChartType = "bar" | "line" | "pie";
 
 /**
- * Internal props for the native chart view component
- */
-export interface ReactNativeChartUiViewProps {
-  data: ChartDataPoint[];
-  chartType: ChartType;
-  title?: string;
-  xAxisLabel?: string;
-  yAxisLabel?: string;
-  style?: StyleProp<ViewStyle>;
-}
-
-/**
- * Props for all chart components
+ * Base props for all chart components
  */
 export interface ChartProps {
   /**
@@ -40,6 +28,16 @@ export interface ChartProps {
   title?: string;
 
   /**
+   * Optional style for the chart container
+   */
+  style?: StyleProp<ViewStyle>;
+}
+
+/**
+ * Props for charts that support axis labels (bar and line)
+ */
+export interface AxisChartProps extends ChartProps {
+  /**
    * Optional x-axis label for the chart
    */
   xAxisLabel?: string;
@@ -48,48 +46,45 @@ export interface ChartProps {
    * Optional y-axis label for the chart
    */
   yAxisLabel?: string;
-
-  /**
-   * Optional style for the chart container
-   */
-  style?: StyleProp<ViewStyle>;
 }
 
-export type OnLoadEventPayload = {
-  url: string;
-};
+/**
+ * Internal props for the native chart view component
+ */
+export interface ReactNativeChartUiViewProps extends AxisChartProps {
+  chartType: ChartType;
+}
 
+/**
+ * Event payload types
+ */
 export type OnChartLoadEventPayload = {
   chartType: string;
-};
-
-export type ReactNativeChartUiModuleEvents = {
-  onChange: (params: ChangeEventPayload) => void;
-  onChartLoad: (params: OnChartLoadEventPayload) => void;
 };
 
 export type ChangeEventPayload = {
   value: string;
 };
 
-export type BarChartProps = {
-  data: ChartDataPoint[];
-  title?: string;
-  xAxisLabel?: string;
-  yAxisLabel?: string;
-  style?: StyleProp<ViewStyle>;
+/**
+ * Module event types
+ */
+export type ReactNativeChartUiModuleEvents = {
+  onChange: (params: ChangeEventPayload) => void;
+  onChartLoad: (params: OnChartLoadEventPayload) => void;
 };
 
-export type LineChartProps = {
-  data: ChartDataPoint[];
-  title?: string;
-  xAxisLabel?: string;
-  yAxisLabel?: string;
-  style?: StyleProp<ViewStyle>;
-};
+/**
+ * Props for BarChart component
+ */
+export type BarChartProps = AxisChartProps;
 
-export type PieChartProps = {
-  data: ChartDataPoint[];
-  title?: string;
-  style?: StyleProp<ViewStyle>;
-};
+/**
+ * Props for LineChart component
+ */
+export type LineChartProps = AxisChartProps;
+
+/**
+ * Props for PieChart component - doesn't use axis labels
+ */
+export type PieChartProps = ChartProps;

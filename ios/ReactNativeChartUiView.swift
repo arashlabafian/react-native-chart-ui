@@ -79,11 +79,6 @@ struct ChartContentView: View {
                                 angularInset: 1
                             )
                             .foregroundStyle(colors[index % colors.count])
-                            .annotation(position: .overlay) {
-                                Text(item.label)
-                                    .font(.caption)
-                                    .foregroundColor(.white)
-                            }
                         }
                     }
                     .chartXAxis(.hidden)
