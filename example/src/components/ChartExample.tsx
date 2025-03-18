@@ -17,7 +17,32 @@ export function ChartExample({ title, initialType = "bar" }: ChartExampleProps) 
       case "bar":
         return <BarChart data={data} title="Sales by Month" xAxisLabel="Months" yAxisLabel="Revenue" style={styles.chart} />;
       case "line":
-        return <LineChart data={data} title="Weekly Performance" xAxisLabel="Days" yAxisLabel="Values" style={styles.chart} />;
+        return (
+          <LineChart
+            data={data}
+            title="Weekly Performance"
+            xAxisLabel="Days"
+            yAxisLabel="Values"
+            style={styles.chart}
+            interactive
+            lineStyle={{
+              color: "#007AFF",
+              width: 2,
+              interpolation: "curved",
+            }}
+            points={{
+              visible: true,
+              size: 6,
+              color: "#007AFF",
+            }}
+            selection={{
+              color: "rgba(0, 122, 255, 0.3)",
+              onSelect: point => {
+                console.log("Selected point:", point);
+              },
+            }}
+          />
+        );
       case "pie":
         return <PieChart data={data} title="Market Share" style={styles.chart} />;
       default:

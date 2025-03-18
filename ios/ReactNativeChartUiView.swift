@@ -14,6 +14,23 @@ struct ChartDataPoint: Identifiable {
     }
 }
 
+// Square shape for symbols
+struct Square: Shape {
+    func path(in rect: CGRect) -> Path {
+        let minimumSize = min(rect.width, rect.height)
+        let squareRect = CGRect(
+            x: (rect.width - minimumSize) / 2,
+            y: (rect.height - minimumSize) / 2,
+            width: minimumSize,
+            height: minimumSize
+        )
+        
+        var path = Path()
+        path.addRect(squareRect)
+        return path
+    }
+}
+
 // Helper SwiftUI view for rendering the chart
 @available(iOS 16.0, *)
 struct ChartContentView: View {
@@ -22,6 +39,10 @@ struct ChartContentView: View {
     var title: String?
     var xAxisLabel: String?
     var yAxisLabel: String?
+    
+    // Selection state for interactive charts
+    @State private var selectedPoint: ChartDataPoint?
+    @State private var plotWidth: CGFloat = 0
     
     // A simple array of colors to use for the pie segments
     private let colors: [Color] = [

@@ -21,6 +21,36 @@ export const lineChartData: ChartDataPoint[] = [
   { label: "Sun", value: 18 },
 ];
 
+// Multi-series data for advanced Line Chart examples
+export const multiSeriesData = [
+  {
+    name: "San Francisco",
+    color: "#8A2BE2", // Purple
+    data: [
+      { label: "Mon", value: 12 },
+      { label: "Tue", value: 15 },
+      { label: "Wed", value: 18 },
+      { label: "Thu", value: 14 },
+      { label: "Fri", value: 20 },
+      { label: "Sat", value: 28 },
+      { label: "Sun", value: 24 },
+    ],
+  },
+  {
+    name: "Cupertino",
+    color: "#32CD32", // Green
+    data: [
+      { label: "Mon", value: 8 },
+      { label: "Tue", value: 10 },
+      { label: "Wed", value: 13 },
+      { label: "Thu", value: 9 },
+      { label: "Fri", value: 11 },
+      { label: "Sat", value: 15 },
+      { label: "Sun", value: 14 },
+    ],
+  },
+];
+
 // Mock data for Pie Chart
 export const pieChartData: ChartDataPoint[] = [
   { label: "Category A", value: 30 },

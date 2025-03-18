@@ -51,13 +51,13 @@ export function BarChart(props: BarChartProps) {
  * Displays data as a connected line with points
  */
 export function LineChart(props: LineChartProps) {
-  const { data, title, xAxisLabel, yAxisLabel, style } = props;
+  const { data, title, xAxisLabel, yAxisLabel, style, interactive = true, lineStyle, points, selection } = props;
 
   if (!NativeChartView) {
     return <ChartFallback chartType="line" />;
   }
 
-  return <NativeChartView data={data} chartType="line" title={title} xAxisLabel={xAxisLabel} yAxisLabel={yAxisLabel} style={style} />;
+  return <NativeChartView data={data} chartType="line" title={title} xAxisLabel={xAxisLabel} yAxisLabel={yAxisLabel} interactive={interactive} lineStyle={lineStyle} points={points} selection={selection} style={style} />;
 }
 
 /**

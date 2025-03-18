@@ -53,6 +53,36 @@ export interface AxisChartProps extends ChartProps {
  */
 export interface ReactNativeChartUiViewProps extends AxisChartProps {
   chartType: ChartType;
+
+  /**
+   * Interactive mode for charts that support it
+   */
+  interactive?: boolean;
+
+  /**
+   * Line style configuration
+   */
+  lineStyle?: {
+    color?: string;
+    width?: number;
+    interpolation?: "linear" | "curved";
+  };
+
+  /**
+   * Point configuration
+   */
+  points?: {
+    visible?: boolean;
+    size?: number;
+    color?: string;
+  };
+
+  /**
+   * Selection configuration
+   */
+  selection?: {
+    color?: string;
+  };
 }
 
 /**
@@ -82,7 +112,67 @@ export type BarChartProps = AxisChartProps;
 /**
  * Props for LineChart component
  */
-export type LineChartProps = AxisChartProps;
+export type LineChartProps = AxisChartProps & {
+  /**
+   * Enable interactive features like tooltips and selection
+   */
+  interactive?: boolean;
+
+  /**
+   * Optional configuration for line style
+   */
+  lineStyle?: {
+    /**
+     * Color of the line
+     */
+    color?: string;
+
+    /**
+     * Width of the line
+     */
+    width?: number;
+
+    /**
+     * Style of the line interpolation
+     */
+    interpolation?: "linear" | "curved";
+  };
+
+  /**
+   * Optional configuration for data points
+   */
+  points?: {
+    /**
+     * Whether to show points
+     */
+    visible?: boolean;
+
+    /**
+     * Size of the points
+     */
+    size?: number;
+
+    /**
+     * Color of the points
+     */
+    color?: string;
+  };
+
+  /**
+   * Optional configuration for selection behavior
+   */
+  selection?: {
+    /**
+     * Color of the selection indicator
+     */
+    color?: string;
+
+    /**
+     * Callback when a point is selected
+     */
+    onSelect?: (point: ChartDataPoint) => void;
+  };
+};
 
 /**
  * Props for PieChart component - doesn't use axis labels
