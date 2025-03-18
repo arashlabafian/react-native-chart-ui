@@ -1,5 +1,5 @@
 import { useEvent } from "expo";
-import React from "react";
+import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, SafeAreaView, View } from "react-native";
 
 import { ChartExample } from "./src/components/ChartExample";
@@ -7,15 +7,14 @@ import { ChartExample } from "./src/components/ChartExample";
 export default function App() {
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        <Text style={styles.header}>React Native Chart UI</Text>
+      <Text style={styles.header}>React Native Chart UI</Text>
 
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionHeader}>Chart Examples</Text>
-          <Text style={styles.description}>Below are examples of different chart types available. You can switch between bar, line, and pie charts and see random data updates.</Text>
-        </View>
-
+      <View style={styles.chartContainer}>
         <ChartExample title="Interactive Chart Example" initialType="bar" />
+      </View>
+
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.spacer} />
 
         <View style={styles.noteContainer}>
           <Text style={styles.noteText}>Note: Only iOS is supported currently. Android support coming soon.</Text>
@@ -40,27 +39,20 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     color: "#333",
   },
-  sectionContainer: {
+  chartContainer: {
+    zIndex: 1,
     backgroundColor: "#fff",
-    padding: 16,
-    margin: 10,
     borderRadius: 10,
+    padding: 16,
+    marginHorizontal: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
     elevation: 2,
   },
-  sectionHeader: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 8,
-    color: "#333",
-  },
-  description: {
-    fontSize: 16,
-    color: "#666",
-    lineHeight: 22,
+  spacer: {
+    height: 450, // Adjusted to account for the entire ChartExample component height
   },
   noteContainer: {
     backgroundColor: "#f0f0f0",

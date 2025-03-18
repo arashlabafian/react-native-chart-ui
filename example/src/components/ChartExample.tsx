@@ -1,7 +1,8 @@
-import React from "react";
-import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { BarChart, LineChart, PieChart } from "react-native-chart-ui";
 
+import { ChartConfig } from "./ChartConfig";
 import { useChartData } from "../hooks/useChartData";
 
 interface ChartExampleProps {
@@ -11,40 +12,58 @@ interface ChartExampleProps {
 
 export function ChartExample({ title, initialType = "bar" }: ChartExampleProps) {
   const { chartType, data, changeChartType, shuffleData } = useChartData(initialType);
+  const [showConfig, setShowConfig] = useState(false);
+  const [chartConfig, setChartConfig] = useState({
+    // Default configuration
+    title: chartType === "bar" ? "Sales by Month" : chartType === "line" ? "Weekly Performance" : "Market Share",
+    xAxisLabel: chartType === "bar" ? "Months" : "Days",
+    yAxisLabel: chartType === "bar" ? "Revenue" : "Values",
+    interactive: true,
+    lineStyle: {
+      color: "#007AFF",
+      width: 2,
+      interpolation: "curved" as "curved" | "linear",
+    },
+    points: {
+      visible: true,
+      size: 6,
+      color: "#007AFF",
+    },
+    selection: {
+      color: "rgba(0, 122, 255, 0.3)",
+    },
+  });
+
+  // Update config when changing chart type for better defaults
+  React.useEffect(() => {
+    setChartConfig(prev => ({
+      ...prev,
+      title: chartType === "bar" ? "Sales by Month" : chartType === "line" ? "Weekly Performance" : "Market Share",
+      xAxisLabel: chartType === "bar" ? "Months" : "Days",
+      yAxisLabel: chartType === "bar" ? "Revenue" : "Values",
+    }));
+  }, [chartType]);
 
   const renderChart = () => {
     switch (chartType) {
       case "bar":
-        return <BarChart data={data} title="Sales by Month" xAxisLabel="Months" yAxisLabel="Revenue" style={styles.chart} />;
+        return <BarChart data={data} title={chartConfig.title} xAxisLabel={chartConfig.xAxisLabel} yAxisLabel={chartConfig.yAxisLabel} style={styles.chart} />;
       case "line":
         return (
           <LineChart
             data={data}
-            title="Weekly Performance"
-            xAxisLabel="Days"
-            yAxisLabel="Values"
+            title={chartConfig.title}
+            xAxisLabel={chartConfig.xAxisLabel}
+            yAxisLabel={chartConfig.yAxisLabel}
             style={styles.chart}
-            interactive
-            lineStyle={{
-              color: "#007AFF",
-              width: 2,
-              interpolation: "curved",
-            }}
-            points={{
-              visible: true,
-              size: 6,
-              color: "#007AFF",
-            }}
-            selection={{
-              color: "rgba(0, 122, 255, 0.3)",
-              onSelect: point => {
-                console.log("Selected point:", point);
-              },
-            }}
+            interactive={chartConfig.interactive}
+            lineStyle={chartConfig.lineStyle}
+            points={chartConfig.points}
+            selection={chartConfig.selection}
           />
         );
       case "pie":
-        return <PieChart data={data} title="Market Share" style={styles.chart} />;
+        return <PieChart data={data} title={chartConfig.title} style={styles.chart} />;
       default:
         return null;
     }
@@ -62,9 +81,21 @@ export function ChartExample({ title, initialType = "bar" }: ChartExampleProps) 
         <ChartTypeButton title="Pie Chart" onPress={() => changeChartType("pie")} isSelected={chartType === "pie"} />
       </View>
 
-      <TouchableOpacity style={styles.shuffleButton} onPress={shuffleData}>
-        <Text style={styles.shuffleButtonText}>Shuffle Data</Text>
-      </TouchableOpacity>
+      <View style={styles.actionsContainer}>
+        <TouchableOpacity style={styles.actionButton} onPress={shuffleData}>
+          <Text style={styles.actionButtonText}>Shuffle Data</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.actionButton} onPress={() => setShowConfig(!showConfig)}>
+          <Text style={styles.actionButtonText}>{showConfig ? "Hide Configuration" : "Configure Chart"}</Text>
+        </TouchableOpacity>
+      </View>
+
+      {showConfig && (
+        <View style={styles.configContainer}>
+          <ChartConfig chartType={chartType} config={chartConfig} onConfigChange={setChartConfig} />
+        </View>
+      )}
     </View>
   );
 }
@@ -88,13 +119,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
     borderRadius: 10,
-    padding: 16,
-    margin: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
   },
   title: {
     fontSize: 18,
@@ -103,7 +127,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   chartContainer: {
-    height: 300,
+    height: 250,
     marginBottom: 16,
   },
   chart: {
@@ -132,14 +156,29 @@ const styles = StyleSheet.create({
   chartTypeButtonTextSelected: {
     color: "#fff",
   },
-  shuffleButton: {
+  actionsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 16,
+  },
+  actionButton: {
     backgroundColor: "#f0f0f0",
     paddingVertical: 10,
+    paddingHorizontal: 16,
     borderRadius: 6,
+    flex: 1,
+    marginHorizontal: 4,
     alignItems: "center",
   },
-  shuffleButtonText: {
+  actionButtonText: {
     color: "#007AFF",
     fontWeight: "600",
+  },
+  configContainer: {
+    marginTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: "#eee",
+    paddingTop: 16,
+    height: 300,
   },
 });
