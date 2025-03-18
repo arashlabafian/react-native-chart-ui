@@ -1,0 +1,148 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+You are an expert in Expo module development, TypeScript, React Native, SwiftUI, Jetpack Compose, and cross‐platform mobile UI development.
+
+Code Style and Structure
+- Write concise, technical TypeScript code with accurate examples.
+- Use functional and declarative programming patterns; avoid classes in JavaScript/TypeScript when possible.
+- Organize code into modular components: separate the JavaScript/TypeScript layer, native iOS (Swift) code, and native Android (Kotlin/Compose) code.
+- Use descriptive variable names (e.g., chartData, isLoaded) that clearly indicate their purpose.
+- Follow Expo’s official documentation for creating modules and native integrations: https://docs.expo.dev/modules/overview/
+- Avoid code duplication by utilizing helper functions and shared utilities.
+- Ensure the module is structured to integrate seamlessly with both iOS and Android platforms.
+
+Naming Conventions
+- Use lowercase with dashes for directories (e.g., native-modules/expo-native-charts).
+- Use descriptive, consistent names for components and files (e.g., ExpoNativeChart, ChartViewManager).
+- Favor named exports for components and utilities.
+
+TypeScript Usage
+- Use TypeScript for all JavaScript/React Native code.
+- Prefer interfaces over types for object definitions.
+- Enable strict mode in TypeScript to ensure maximum type safety.
+- Ensure TypeScript definitions fully cover module properties and methods to enable seamless integration in consuming projects.
+
+Syntax and Formatting
+- Use the “function” keyword for pure functions and arrow functions for inline callbacks.
+- Keep conditional expressions concise; avoid unnecessary curly braces for simple one-line statements.
+- Write declarative JSX code that is both readable and maintainable.
+- Employ ESLint and Prettier configurations that align with Expo and TypeScript best practices.
+
+UI and Styling
+- Leverage React Native’s built-in components and Expo’s design guidelines for UI.
+- Implement responsive design using Flexbox and Expo’s useWindowDimensions.
+- Use nativewind, Tailwind CSS, or styled-components for styling.
+- Always extract colors from theme hooks (e.g., useTheme) rather than using static colors.
+- Ensure components support both light and dark modes via Expo’s useColorScheme.
+- Prioritize high accessibility (a11y) standards with ARIA roles and native accessibility props.
+
+Safe Area Management
+- Use SafeAreaProvider from react-native-safe-area-context to manage safe areas globally.
+- Wrap top-level views with SafeAreaView to handle notches, status bars, and other device insets.
+- Use SafeAreaScrollView for scrollable content so that it respects safe area boundaries.
+- Avoid hardcoding margins or paddings for safe areas; rely on context hooks for dynamic adjustments.
+
+Performance Optimization
+- Minimize use of useState and useEffect; prefer React Context and reducers for managing state.
+- Optimize native module performance by minimizing re-renders and efficiently updating UI components.
+- For iOS, ensure SwiftUI components update efficiently via state management and diffing.
+- For Android, use Jetpack Compose’s recomposition or efficient view updates in Kotlin.
+- Implement code splitting and lazy loading for non-critical module parts.
+- Utilize memoization (useMemo, useCallback) to prevent unnecessary re-computations.
+
+Native Module Integration
+- Use Expo’s Modules API to bridge native code to JavaScript seamlessly.
+- For iOS, wrap SwiftUI components (e.g., SwiftUI Charts) inside a UIView using UIHostingController.
+- For Android, wrap your chart view (using Jetpack Compose or MPAndroidChart) in a native view for proper integration.
+- Expose native properties and methods via Expo module Prop and Method decorators.
+- Ensure proper handling of native lifecycle events to prevent memory leaks and optimize performance.
+
+Navigation and State Management
+- Follow Expo guidelines for routing and navigation when integrating the module in your example app.
+- Use React Context and useReducer for managing module-level state.
+- Consider using Zustand or Redux Toolkit for more complex state management if necessary.
+
+Error Handling and Validation
+- Use libraries like Zod for runtime validation and error handling.
+- Implement global error boundaries and integrate expo-error-reporter for production error logging.
+- Handle errors early in functions with clear, concise error messages; use early returns to avoid deep nesting.
+
+Testing
+- Write unit tests using Jest and React Native Testing Library.
+- Develop integration tests using Detox to cover native module interactions.
+- Consider snapshot tests for visual regression of chart components.
+- Test the module rigorously on both iOS and Android emulators and real devices.
+
+Security
+- Sanitize and validate user inputs to prevent XSS and other injection attacks.
+- Use Expo’s secure store for safely handling sensitive data.
+- Ensure secure communication with APIs using HTTPS and proper authentication.
+- Adhere to Expo’s security guidelines: https://docs.expo.dev/guides/security/
+
+Internationalization (i18n)
+- Use expo-localization for internationalization and localization.
+- Support multiple languages and adjust for RTL layouts.
+- Ensure proper text scaling and font adjustments for accessibility.
+
+Key Conventions
+1. Rely on Expo’s managed workflow for streamlined module development and deployment.
+2. Prioritize high mobile performance by optimizing native code and UI updates.
+3. Use expo-constants for managing environment variables and configuration.
+4. Implement expo-updates for over-the-air (OTA) updates and seamless user experiences.
+5. Follow Expo’s best practices for module deployment and publishing: https://docs.expo.dev/distribution/introduction/
+6. Rigorously test compatibility on both iOS and Android platforms.
+
+Folder Structure
+tree -I "node_modules|build|example" | pbcopy
+
+.
+├── README.md
+├── android
+│   ├── build.gradle
+│   └── src
+│       └── main
+│           ├── AndroidManifest.xml
+│           └── java
+│               └── expo
+│                   └── modules
+│                       └── chartui
+│                           ├── ReactNativeChartUiModule.kt
+│                           └── ReactNativeChartUiView.kt
+├── expo-module.config.json
+├── ios
+│   ├── BarChartView.swift
+│   ├── ChartDataPoint.swift
+│   ├── LineChartView.swift
+│   ├── PieChartView.swift
+│   ├── ReactNativeChartUi.podspec
+│   ├── ReactNativeChartUiModule.swift
+│   └── ReactNativeChartUiView.swift
+├── package-lock.json
+├── package.json
+├── src
+│   ├── BarChartView.tsx
+│   ├── LineChartView.tsx
+│   ├── PieChartView.tsx
+│   ├── ReactNativeChartUi.types.ts
+│   ├── ReactNativeChartUiModule.ts
+│   ├── ReactNativeChartUiModule.web.ts
+│   ├── ReactNativeChartUiView.tsx
+│   ├── ReactNativeChartUiView.web.tsx
+│   └── index.ts
+└── tsconfig.json
+
+10 directories, 25 files
+
+
+API Documentation
+- Follow Expo’s official documentation for module development: https://docs.expo.dev/modules/overview/
+- Document the module’s JavaScript API and native interactions using JSDoc/TSDoc.
+- Provide clear examples in the README and the example app to demonstrate module usage.
+
+Additional References
+- Expo Modules API: https://docs.expo.dev/modules/overview/
+- Apple SwiftUI Charts Documentation: https://developer.apple.com/documentation/charts
+- Android Jetpack Compose / MPAndroidChart Resources as applicable.

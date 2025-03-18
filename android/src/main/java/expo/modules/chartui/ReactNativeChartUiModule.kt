@@ -16,7 +16,13 @@ class ReactNativeChartUiModule : Module() {
 
     // Sets constant properties on the module. Can take a dictionary or a closure that returns a dictionary.
     Constants(
-      "PI" to Math.PI
+      "PI" to Math.PI,
+      "CHART_TYPES" to mapOf(
+        "BAR" to "bar",
+        "LINE" to "line",
+        "PIE" to "pie"
+      ),
+      "ANDROID_NOT_IMPLEMENTED" to "Android implementation is not yet available"
     )
 
     // Defines event names that the module can send to JavaScript.

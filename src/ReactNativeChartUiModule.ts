@@ -1,12 +1,23 @@
-import { NativeModule, requireNativeModule } from 'expo';
+import { requireNativeModule } from "expo-modules-core";
 
-import { ReactNativeChartUiModuleEvents } from './ReactNativeChartUi.types';
+// It loads the native module object from the JSI or falls back to
+// the bridge module (from NativeModulesProxy) if the remote debugger is on.
+const ReactNativeChartUiModule = requireNativeModule("ReactNativeChartUi") as {
+  readonly CHART_TYPES: {
+    readonly BAR: string;
+    readonly LINE: string;
+    readonly PIE: string;
+  };
+  readonly SUPPORTED_IOS_VERSION: {
+    readonly BAR: number;
+    readonly LINE: number;
+    readonly PIE: number;
+  };
+  getAvailableChartTypes(): Promise<{
+    readonly BAR?: string;
+    readonly LINE?: string;
+    readonly PIE?: string;
+  }>;
+};
 
-declare class ReactNativeChartUiModule extends NativeModule<ReactNativeChartUiModuleEvents> {
-  PI: number;
-  hello(): string;
-  setValueAsync(value: string): Promise<void>;
-}
-
-// This call loads the native module object from the JSI.
-export default requireNativeModule<ReactNativeChartUiModule>('ReactNativeChartUi');
+export default ReactNativeChartUiModule;

@@ -1,15 +1,4 @@
-import { registerWebModule, NativeModule } from 'expo';
+// This module is not intended for web use
+throw new Error("ReactNativeChartUi is not supported on web platforms");
 
-import { ReactNativeChartUiModuleEvents } from './ReactNativeChartUi.types';
-
-class ReactNativeChartUiModule extends NativeModule<ReactNativeChartUiModuleEvents> {
-  PI = Math.PI;
-  async setValueAsync(value: string): Promise<void> {
-    this.emit('onChange', { value });
-  }
-  hello() {
-    return 'Hello world! 👋';
-  }
-}
-
-export default registerWebModule(ReactNativeChartUiModule);
+export default {};
