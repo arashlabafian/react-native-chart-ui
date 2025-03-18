@@ -142,12 +142,13 @@ struct ChartContentView: View {
                         )
                         .foregroundStyle(selectionColor)
                         .zIndex(-1)
-                        .annotation(position: .top, spacing: 0) {
+                        .annotation(position: .top, spacing: 10, overflowResolution: .init(x: .fit, y: .disabled)) {
                             valueSelectionPopover(for: point)
                         }
                     }
                 }
-                .padding()
+                .chartYScale(domain: calculateYAxisDomain())
+                .padding(.top, 40)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .chartXSelection(value: $selectedDataPoint)
                 .sensoryFeedback(.selection, trigger: selectedDataPoint)
@@ -199,6 +200,20 @@ struct ChartContentView: View {
             }
         }
         .padding(.horizontal)
+    }
+    
+    // Calculate appropriate Y-axis domain to keep it fixed
+    private func calculateYAxisDomain() -> ClosedRange<Double> {
+        guard !data.isEmpty else { return 0...10 }
+        
+        let minValue = data.map { $0.value }.min() ?? 0
+        let maxValue = data.map { $0.value }.max() ?? 10
+        
+        // Add padding to ensure points aren't at the edges
+        let padding = (maxValue - minValue) * 0.1
+        
+        // Ensure we have a valid range with minimum height
+        return max(0, minValue - padding)...max(maxValue + padding, minValue + 10)
     }
     
     // Value selection popover

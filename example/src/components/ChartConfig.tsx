@@ -31,6 +31,29 @@ function ColorPicker({ selectedColor, onSelectColor }: ColorPickerProps) {
   );
 }
 
+// Segmented control for binary choices - more iOS-like
+interface SegmentedControlProps {
+  options: { label: string; value: string }[];
+  selectedValue: string;
+  onValueChange: (value: string) => void;
+}
+
+function SegmentedControl({ options, selectedValue, onValueChange }: SegmentedControlProps) {
+  return (
+    <View style={styles.segmentedContainer}>
+      {options.map((option, index) => (
+        <TouchableOpacity
+          key={option.value}
+          style={[styles.segmentOption, index === 0 && styles.segmentOptionFirst, index === options.length - 1 && styles.segmentOptionLast, selectedValue === option.value && styles.segmentOptionSelected]}
+          onPress={() => onValueChange(option.value)}
+        >
+          <Text style={[styles.segmentText, selectedValue === option.value && styles.segmentTextSelected]}>{option.label}</Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+}
+
 export interface ChartConfigProps {
   chartType: ChartType;
   config: {
@@ -111,67 +134,122 @@ export function ChartConfig({ chartType, config, onConfigChange }: ChartConfigPr
     <View style={styles.section}>
       <Text style={styles.sectionTitle}>Line Chart Configuration</Text>
 
-      <View style={[styles.configItem, styles.interactiveToggle]}>
-        <Text style={styles.label}>Interactive Mode</Text>
-        <Text style={styles.description}>When enabled, you can tap and drag to view data points</Text>
-        <Switch value={config.interactive ?? true} onValueChange={value => updateConfig("interactive", value)} trackColor={{ false: "#d3d3d3", true: "#007AFF50" }} thumbColor={config.interactive ? "#007AFF" : "#f4f3f4"} />
+      {/* Line Style Card */}
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>Line Style</Text>
+
+        <View style={styles.cardRow}>
+          <Text style={styles.label}>Interpolation</Text>
+          <SegmentedControl
+            options={[
+              { label: "Linear", value: "linear" },
+              { label: "Curved", value: "curved" },
+            ]}
+            selectedValue={config.lineStyle?.interpolation || "curved"}
+            onValueChange={value => updateConfig("lineStyle.interpolation", value)}
+          />
+        </View>
+
+        <View style={styles.cardRow}>
+          <Text style={styles.label}>Line Width</Text>
+          <View style={styles.sliderContainer}>
+            <Slider
+              style={styles.compactSlider}
+              minimumValue={1}
+              maximumValue={5}
+              step={0.5}
+              value={config.lineStyle?.width || 2}
+              onValueChange={value => updateConfig("lineStyle.width", value)}
+              minimumTrackTintColor="#007AFF"
+              maximumTrackTintColor="#DEDEDE"
+            />
+            <Text style={styles.sliderValue}>{config.lineStyle?.width || 2}</Text>
+          </View>
+        </View>
       </View>
 
-      <View style={styles.configItem}>
-        <Text style={styles.label}>Line Color</Text>
+      {/* Colors Card */}
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>Colors</Text>
+
+        <View style={styles.cardRow}>
+          <Text style={styles.label}>Line Color</Text>
+          <View style={[styles.colorValueDisplay, { backgroundColor: config.lineStyle?.color || "#007AFF" }]} />
+        </View>
         <ColorPicker selectedColor={config.lineStyle?.color || "#007AFF"} onSelectColor={color => updateConfig("lineStyle.color", color)} />
-      </View>
 
-      <View style={styles.configItem}>
-        <Text style={styles.label}>Line Width: {config.lineStyle?.width || 2}</Text>
-        <Slider style={styles.slider} minimumValue={1} maximumValue={5} step={0.5} value={config.lineStyle?.width || 2} onValueChange={value => updateConfig("lineStyle.width", value)} minimumTrackTintColor="#007AFF" maximumTrackTintColor="#DEDEDE" />
-      </View>
-
-      <View style={styles.configItem}>
-        <Text style={styles.label}>Interpolation</Text>
-        <Picker selectedValue={config.lineStyle?.interpolation || "curved"} style={styles.picker} onValueChange={value => updateConfig("lineStyle.interpolation", value)}>
-          <Picker.Item label="Linear" value="linear" />
-          <Picker.Item label="Curved" value="curved" />
-        </Picker>
-      </View>
-
-      <View style={styles.configItem}>
-        <Text style={styles.label}>Show Points</Text>
-        <Switch value={config.points?.visible ?? true} onValueChange={value => updateConfig("points.visible", value)} />
-      </View>
-
-      {config.points?.visible && (
-        <>
-          <View style={styles.configItem}>
-            <Text style={styles.label}>Point Size: {config.points?.size || 6}</Text>
-            <Slider style={styles.slider} minimumValue={2} maximumValue={12} step={1} value={config.points?.size || 6} onValueChange={value => updateConfig("points.size", value)} minimumTrackTintColor="#007AFF" maximumTrackTintColor="#DEDEDE" />
-          </View>
-
-          <View style={styles.configItem}>
-            <Text style={styles.label}>Point Color</Text>
+        {config.points?.visible && (
+          <>
+            <View style={styles.cardRow}>
+              <Text style={styles.label}>Point Color</Text>
+              <View style={[styles.colorValueDisplay, { backgroundColor: config.points?.color || "#007AFF" }]} />
+            </View>
             <ColorPicker selectedColor={config.points?.color || "#007AFF"} onSelectColor={color => updateConfig("points.color", color)} />
-          </View>
-        </>
-      )}
+          </>
+        )}
 
-      <View style={styles.configItem}>
-        <Text style={styles.label}>Selection Color</Text>
-        <ColorPicker
-          selectedColor={config.selection?.color || "rgba(0, 122, 255, 0.3)"}
-          onSelectColor={color => {
-            // Convert to semi-transparent version for selection
-            let colorValue = color;
-            if (!colorValue.includes("rgba")) {
-              // Convert hex to rgba with transparency
-              const hexWithoutHash = colorValue.replace("#", "");
-              const r = parseInt(hexWithoutHash.substring(0, 2), 16);
-              const g = parseInt(hexWithoutHash.substring(2, 4), 16);
-              const b = parseInt(hexWithoutHash.substring(4, 6), 16);
-              colorValue = `rgba(${r}, ${g}, ${b}, 0.3)`;
-            }
-            updateConfig("selection.color", colorValue);
-          }}
-        />
+        {config.interactive && (
+          <>
+            <View style={styles.cardRow}>
+              <Text style={styles.label}>Selection Color</Text>
+              <View style={[styles.colorValueDisplay, { backgroundColor: config.selection?.color || "rgba(0, 122, 255, 0.3)" }]} />
+            </View>
+            <ColorPicker
+              selectedColor={config.selection?.color || "rgba(0, 122, 255, 0.3)"}
+              onSelectColor={color => {
+                // Convert to semi-transparent version for selection
+                let colorValue = color;
+                if (!colorValue.includes("rgba")) {
+                  // Convert hex to rgba with transparency
+                  const hexWithoutHash = colorValue.replace("#", "");
+                  const r = parseInt(hexWithoutHash.substring(0, 2), 16);
+                  const g = parseInt(hexWithoutHash.substring(2, 4), 16);
+                  const b = parseInt(hexWithoutHash.substring(4, 6), 16);
+                  colorValue = `rgba(${r}, ${g}, ${b}, 0.3)`;
+                }
+                updateConfig("selection.color", colorValue);
+              }}
+            />
+          </>
+        )}
+      </View>
+
+      {/* Points Card */}
+      <View style={styles.card}>
+        <View style={styles.cardRowSpaced}>
+          <Text style={styles.cardTitle}>Points</Text>
+          <Switch value={config.points?.visible ?? true} onValueChange={value => updateConfig("points.visible", value)} trackColor={{ false: "#d3d3d3", true: "#007AFF50" }} thumbColor={config.points?.visible ? "#007AFF" : "#f4f3f4"} />
+        </View>
+
+        {config.points?.visible && (
+          <View style={styles.cardRow}>
+            <Text style={styles.label}>Point Size</Text>
+            <View style={styles.sliderContainer}>
+              <Slider
+                style={styles.compactSlider}
+                minimumValue={2}
+                maximumValue={12}
+                step={1}
+                value={config.points?.size || 6}
+                onValueChange={value => updateConfig("points.size", value)}
+                minimumTrackTintColor="#007AFF"
+                maximumTrackTintColor="#DEDEDE"
+              />
+              <Text style={styles.sliderValue}>{config.points?.size || 6}</Text>
+            </View>
+          </View>
+        )}
+      </View>
+
+      {/* Interactive Card */}
+      <View style={styles.card}>
+        <View style={styles.cardRowSpaced}>
+          <View>
+            <Text style={styles.cardTitle}>Interactive Mode</Text>
+            <Text style={styles.description}>Tap and drag to view data points</Text>
+          </View>
+          <Switch value={config.interactive ?? true} onValueChange={value => updateConfig("interactive", value)} trackColor={{ false: "#d3d3d3", true: "#007AFF50" }} thumbColor={config.interactive ? "#007AFF" : "#f4f3f4"} />
+        </View>
       </View>
     </View>
   );
@@ -256,15 +334,13 @@ const styles = StyleSheet.create({
   },
   colorPickerContainer: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    marginTop: 4,
+    justifyContent: "space-between",
+    marginVertical: 8,
   },
   colorOption: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    marginRight: 10,
-    marginBottom: 10,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
     borderWidth: 1,
     borderColor: "#ddd",
   },
@@ -275,7 +351,6 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 12,
     color: "#888",
-    marginBottom: 8,
   },
   interactiveToggle: {
     backgroundColor: "#f9f9f9",
@@ -284,5 +359,87 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderLeftWidth: 3,
     borderLeftColor: "#007AFF",
+  },
+  segmentedContainer: {
+    flexDirection: "row",
+    backgroundColor: "#f0f0f0",
+    borderRadius: 8,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "#007AFF",
+    height: 30,
+  },
+  segmentOption: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRightWidth: 0.5,
+    borderRightColor: "#007AFF",
+    borderLeftWidth: 0.5,
+    borderLeftColor: "#007AFF",
+  },
+  segmentOptionFirst: {
+    borderLeftWidth: 0,
+  },
+  segmentOptionLast: {
+    borderRightWidth: 0,
+  },
+  segmentOptionSelected: {
+    backgroundColor: "#007AFF",
+  },
+  segmentText: {
+    fontSize: 13,
+    color: "#007AFF",
+  },
+  segmentTextSelected: {
+    color: "white",
+  },
+  card: {
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 12,
+    marginVertical: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  cardTitle: {
+    fontSize: 15,
+    fontWeight: "600",
+    color: "#333",
+    marginBottom: 8,
+  },
+  cardRow: {
+    marginVertical: 8,
+  },
+  cardRowSpaced: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginVertical: 4,
+  },
+  sliderContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  compactSlider: {
+    flex: 1,
+    height: 30,
+  },
+  sliderValue: {
+    width: 30,
+    textAlign: "right",
+    fontSize: 14,
+    color: "#777",
+  },
+  colorValueDisplay: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    alignSelf: "flex-end",
   },
 });
