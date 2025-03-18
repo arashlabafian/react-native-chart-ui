@@ -6,10 +6,10 @@ A native chart library for React Native that provides high-performance chart com
 
 ## Features
 
-- ✅ iOS Support:
+- 🚧 iOS Support (In Development):
   - Bar Charts, Line Charts (requires iOS 16.0+)
   - Pie Charts (requires iOS 17.0+)
-  - **Note**: iOS implementation is functional but still in active development
+  - **Note**: iOS implementation is still in active development and not feature-complete
 - ❌ Android Support: In development
 - ❌ Web Support: Not planned
 
@@ -100,11 +100,11 @@ export default function PieChartExample() {
 
 | Chart Type | iOS              | Android           | Web            |
 | ---------- | ---------------- | ----------------- | -------------- |
-| Bar Chart  | ✅ (iOS 16.0+)\* | 🚧 In development | ❌ Not planned |
-| Line Chart | ✅ (iOS 16.0+)\* | 🚧 In development | ❌ Not planned |
-| Pie Chart  | ✅ (iOS 17.0+)\* | 🚧 In development | ❌ Not planned |
+| Bar Chart  | 🚧 (iOS 16.0+)\* | 🚧 In development | ❌ Not planned |
+| Line Chart | 🚧 (iOS 16.0+)\* | 🚧 In development | ❌ Not planned |
+| Pie Chart  | 🚧 (iOS 17.0+)\* | 🚧 In development | ❌ Not planned |
 
-\* iOS implementation is functional but still in active development. Features and APIs may change.
+\* iOS implementation is in active development. Features are incomplete and APIs may change significantly.
 
 On unsupported iOS versions, the component will render a fallback view.
 
