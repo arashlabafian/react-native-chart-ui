@@ -1,0 +1,17 @@
+{
+  "platforms": [
+    "apple",
+    "android",
+    "web"
+  ],
+  "apple": {
+    "modules": [
+      "ReactNativeChartUiModule"
+    ]
+  },
+  "android": {
+    "modules": [
+      "expo.modules.chartui.ReactNativeChartUiModule"
+    ]
+  }
+}

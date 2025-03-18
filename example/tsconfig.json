@@ -1,0 +1,10 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "paths": {
+      "react-native-chart-ui": ["../src/index"],
+      "react-native-chart-ui/*": ["../src/*"]
+    }
+  }
+}
